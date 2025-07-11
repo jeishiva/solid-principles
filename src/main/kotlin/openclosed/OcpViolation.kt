@@ -1,4 +1,4 @@
-package com.jeishiva.openclosed
+package openclosed
 
 import com.jeishiva.common.Message
 import com.jeishiva.common.MessageType
