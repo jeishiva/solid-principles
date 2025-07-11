@@ -24,14 +24,3 @@ By applying the **Open/Closed Principle**, we make the system:
 
 This is done by defining an interface like `MessageRenderer`,
 and implementing it for each media type.
-
-
----
-
-### 📁 Files
-
-| File                     | Purpose                              |
-|--------------------------|--------------------------------------|
-| `MediaRendererViolation.kt` | Violates OCP — logic is not extensible |
-| `MediaRendererCompliant.kt` | Follows OCP — clean, extensible design |
-

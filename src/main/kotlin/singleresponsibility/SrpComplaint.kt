@@ -1,33 +1,41 @@
-package com.jeishiva.singleresponsibility
+package singleresponsibility
 
 import com.jeishiva.common.GameState
 
+
+
 /**
- * This implementation follows the Single Responsibility Principle (SRP).
+ * This design follows the Single Responsibility Principle.
  *
- * How it’s compliant:
- * --------------------------------------------------
- * 1. Each class and interface has a single responsibility:
- *    - GameFeatureFlagFetcher → fetches game feature flags only
- *    - GameStateFetcher → fetches game state only
- *    - GameStateCache → handles caching game state only
+ * Each class has one job:
+ * - `GameFeatureFlagFetcher` → fetches flags
+ * - `GameStateFetcher` → fetches game state
+ * - `GameStateCache` → handles caching
  *
- * 2. Changes in one responsibility affect only one class:
- *    - You can modify feature flag retrieval without affecting game state or caching logic.
- *    - You can switch caching (e.g., from memory to disk) independently.
- *
- * 3. Improves maintainability:
- *    - Focused classes are easier to understand and modify.
- *
- * 4. Enhances extensibility:
- *    - Easy to add features (e.g., cloud sync, new game modes) without impacting unrelated parts.
- *
- * 5. Promotes focused unit testing:
- *    - Each class can be tested in isolation with mocks/stubs.
- *    - No hidden side effects or tight coupling.
- *
- * This separation of concerns makes the codebase robust, scalable, and demo-friendly.
+ * This makes the system easier to modify, test, and scale.
  */
+class GameSettingsCoordinator(
+    private val featureFlagFetcher: GameFeatureFlagFetcher,
+    private val gameStateFetcher: GameStateFetcher,
+    private val gameStateCache: GameStateCache
+) {
+    fun fetchGameState(playerId: Int): GameState {
+        return gameStateFetcher.downloadGameState(playerId)
+    }
+
+    fun cacheGameState(gameState: GameState): Boolean {
+        return gameStateCache.cacheGameState(gameState)
+    }
+
+    fun getCachedGameState(playerId: Int): GameState? {
+        return gameStateCache.getGameState(playerId)
+    }
+
+    fun getGameFeatureFlags(): Map<String, Boolean> {
+        return featureFlagFetcher.downloadGameFeatureFlags()
+    }
+}
+
 
 /**
  * Responsible only for fetching game feature flags.
@@ -65,8 +73,8 @@ class RemoteGameFeatureFlagFetcher : GameFeatureFlagFetcher {
     override fun downloadGameFeatureFlags(): Map<String, Boolean> {
         // Simulate remote call for game feature flags
         return mapOf(
-            "isMultiplayerEnabled" to true,    // Clear, boolean-friendly name
-            "isLeaderboardEnabled" to false    // Consistent naming
+            "isMultiplayerEnabled" to true,
+            "isLeaderboardEnabled" to false
         )
     }
 }
@@ -104,36 +112,3 @@ class InMemoryGameStateCache : GameStateCache {
     }
 }
 
-/**
- * GameSettingsCoordinator orchestrates high-level game settings operations.
- *
- * SRP Compliance:
- * --------------------------------------------------
- * - Delegates responsibilities to specialized collaborators:
- *     - GameFeatureFlagFetcher handles game feature flag retrieval
- *     - GameStateFetcher handles fetching game state
- *     - GameStateCache handles caching
- *
- * Promotes loose coupling and high cohesion.
- */
-class GameSettingsCoordinator(
-    private val featureFlagFetcher: GameFeatureFlagFetcher,
-    private val gameStateFetcher: GameStateFetcher,
-    private val gameStateCache: GameStateCache
-) {
-    fun fetchGameState(playerId: Int): GameState {
-        return gameStateFetcher.downloadGameState(playerId)
-    }
-
-    fun cacheGameState(gameState: GameState): Boolean {
-        return gameStateCache.cacheGameState(gameState)
-    }
-
-    fun getCachedGameState(playerId: Int): GameState? {
-        return gameStateCache.getGameState(playerId)
-    }
-
-    fun getGameFeatureFlags(): Map<String, Boolean> {
-        return featureFlagFetcher.downloadGameFeatureFlags()
-    }
-}

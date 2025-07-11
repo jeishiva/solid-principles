@@ -1,26 +1,16 @@
-package com.jeishiva.singleresponsibility
+package singleresponsibility
 
 import com.jeishiva.common.GameState
 
 /**
  * This class violates the Single Responsibility Principle.
  *
- * Reasons:
- * 1. This class is responsible for multiple things:
- *    - Downloading game feature flags
- *    - Downloading game state
- *    - Caching game state
+ * It handles multiple responsibilities:
+ * - Downloading feature flags
+ * - Fetching game state
+ * - Caching game state
  *
- * 2. Multiple unrelated changes can affect this class.
- *    For example:
- *      - A change in how feature flags are fetched (e.g., from remote to local)
- *      - A change in the game state structure (e.g., adding new fields)
- *      - A change in caching strategy (e.g., from memory to database)
- *
- * 3. Maintainability, extensibility, and testing become difficult.
- *    - Too many reasons to modify the class
- *    - Hard to write focused unit tests due to coupled logic
- *    - Violates separation of concerns
+ * This makes the class hard to test, maintain, and extend.
  */
 class GameSettingsManager {
     private val cache = mutableMapOf<Int, GameState>()

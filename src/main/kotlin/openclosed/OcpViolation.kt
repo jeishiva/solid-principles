@@ -4,7 +4,7 @@ import com.jeishiva.common.Message
 import com.jeishiva.common.MessageType
 
 /**
- * ❌ This class violates the Open/Closed Principle.
+ * This class violates the Open/Closed Principle.
  *
  * It handles rendering for multiple message types using a `when` block.
  * Every time a new message type (e.g., audio, location) is added,
