@@ -1,6 +1,6 @@
 package com.jeishiva.singleresponsibility
 
-import com.jeishiva.entities.GameState
+import com.jeishiva.common.GameState
 
 /**
  * This class violates the Single Responsibility Principle.
